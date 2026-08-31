@@ -1,7 +1,7 @@
 {
   "name": "@appliqation/visual-regression",
-  "version": "0.1.0",
-  "description": "Standalone agent that checks a page for real visual regressions by diffing it against its own live production counterpart — no stored baseline files, no manual baseline-approval workflow. Declines rather than compares when no production equivalent exists.",
+  "version": "0.1.1",
+  "description": "Standalone agent that checks a page for real visual regressions by diffing it against its own live production counterpart: no stored baseline files, no manual baseline-approval workflow. Declines rather than compares when no production equivalent exists.",
   "license": "MIT",
   "repository": {
     "type": "git",
