@@ -160,14 +160,25 @@ real layout break.
   assumes path identity means content identity; no equivalence-resolution built.
 - Reproducing multi-step application state beyond auth (cart contents, a partially
   filled form) — direct-navigation only.
-- Wiring into `appliqation-autopilot` as a meta-tool. When it happens, there isn't one
-  centralized caller: Autopilot's own top-down path (a TC `Tag: visual` plus a `--visual`
-  authorization flag, same hardcoded-exclusion pattern `--allow-pr` already uses for
-  `run_pr_raise`) and a bottom-up reactive path from `appliqation-explorer` or
-  `appq:autotest-validator` (an in-the-moment "this seems visually significant, let me
-  check" escalation from a session already in the deeper, judgment-bearing tier — never
-  from `autotest`'s own deterministic sweep, which stays cheap on purpose) are both
-  legitimate, and this agent's CLI/tool contract stays identical either way.
+- A bottom-up reactive caller from `appliqation-explorer` or `appq:autotest-validator`
+  (an in-the-moment "this seems visually significant, let me check" escalation from a
+  session already in the deeper, judgment-bearing tier, never from `autotest`'s own
+  deterministic sweep, which stays cheap on purpose). Only the top-down Autopilot path
+  is wired so far, see "Consumed by" below; this agent's CLI/tool contract stays
+  identical either way, so a future bottom-up caller needs no change here.
+
+## Consumed by
+
+`appliqation-autopilot` wires this in as `run_visual_check`, gated behind a `--visual`
+flag plus a required `--baseline-environment <name>` (same hardcoded-exclusion pattern
+`--allow-pr` already uses for `run_pr_raise`: the tool simply isn't offered to the
+model without it). Autopilot's own policy only calls it for a TC tagged `visual` (or
+an equally specific stated reason), sources the real route from
+`get_execution_evidence` on a `run_id` it already has, and treats a `not-applicable`/
+`expected-divergence`/`inconclusive` result the same as `regression`: real evidence to
+report, never something to retry or second-guess. See
+`~/Sites/localhost/appliqation-autopilot/CLAUDE.md`'s `metaTools.ts` bullet for the
+exact wiring.
 
 ## Commands
 
