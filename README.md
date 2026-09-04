@@ -40,6 +40,29 @@ appliqation-visual-regression check \
 
 Add `--json`/`--ci` for a structured summary. The exit code is 0 for `expected-divergence`/`not-applicable`, 1 for `regression`/`inconclusive` (fail-closed on ambiguity). The JSON summary's `verdict` field is what actually distinguishes the outcomes, not the exit code alone.
 
+## CLI reference
+
+`appliqation-visual-regression check [options]`
+
+**Required:**
+
+| Option | Description |
+|---|---|
+| `--test-case-uuid <uuid>` | Test case this route belongs to; derives `project_id`, supplies `expected_result` context. |
+| `--route </path>` | The route to check, e.g. `/subscribe`; the same route is checked on both environments. |
+| `--baseline-environment <name>` | Environment name treated as the source of truth (commonly, but not necessarily, "Prod"). |
+| `--target-environment <name>` | Environment name being checked against the baseline. |
+
+**Optional:**
+
+| Option | Description |
+|---|---|
+| `--mask <selector>` | CSS selector to mask before capturing (repeatable); reduces noise on known dynamic regions. |
+| `--storage-state <path>` | Playwright storageState file, for auth-gated routes. |
+| `--max-turns <n>` | Override `BUDGET_MAX_TURNS` for this run. |
+| `--json` | Print a single structured JSON summary on stdout instead of a human-readable report. |
+| `--ci` | Shorthand for `--json`; exit code already reflects the real verdict either way. |
+
 ## What this agent does not do (on purpose)
 
 - **No route enumeration or inference.** `--route` is always explicit; there's no structured route data on a scenario/test case to derive it from (confirmed: routes only ever exist inside free-text step descriptions). A real caller with a just-completed run derives it from real observed navigation data (`get_execution_evidence`), never by guessing at step text.
